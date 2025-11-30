@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=MedievalSharp&family=Uncial+Antiqua&family=Pirata+One&family=Mystery+Quest&display=swap" rel="stylesheet">
+    <title>Character Info</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <style>
+        #escapeMenu {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #333;
+            padding: 20px;
+            border-radius: 10px;
+            color: white;
+            width: 300px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0,0,0,0.4);
+        }
+        #dicePopup {
+            display: none;
+            position: absolute;
+            background: #222;
+            padding: 15px;
+            border-radius: 10px;
+            color: white;
+            width: 250px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.4);
+            z-index: 1000;
+        }
+         #dungeonMap {
+             display: none; /* hidden by default */
+             position: fixed; /* overlay on top of everything */
+             top: 50%;
+             left: 50%;
+             transform: translate(-50%, -50%);
+             background: rgba(0, 0, 0, 0.9); /* semi-transparent dark background */
+             color: #aaa;
+             padding: 20px;
+             border-radius: 10px;
+             max-width: 90%;
+             max-height: 80%;
+             overflow: auto; /* scroll if too large */
+             z-index: 2000; /* on top of chat & menu */
+             font-family: 'Courier New', Courier, monospace;
+             font-size: 12px;
+             white-space: pre; /* preserve dungeon map spacing */
+             box-shadow: 0 0 20px rgba(0,0,0,0.6);
+             overflow: auto;
+         }
+    </style>
+
+    </style>
+</head>
+<body>
+<div id="escapeMenu">
+    <h2>Game Menu</h2>
+    <button onclick="window.location.href='/AIDnD'">Exit to Main Menu</button>
+    <button onclick="menuKey()">Cancel</button>
+</div>
+
+<div id="dicePopup">
+    <h3>Dice Roller</h3>
+    <label style="padding-left: 0%">Number of Dice:</label>
+    <input type="number" id="numDice" min="1">
+
+    <label style="padding-left: 0%">Dice Range (e.g., 6 for d6):</label>
+    <input type="number" id="diceRange" min="2">
+    <br>
+    <button onclick="submitDice()">Submit</button>
+    <button onclick="closeDicePopup()">Close</button>
+</div>
+
+<pre id="dungeonMap" style="display:none; background:#000000; color:gray; padding:10px;"></pre>
+
+<div id="character-sheet" >
+    <h1 style="padding-left: 33%;">Character Info</h1> <br>
+    <p class="stat">Name: <span th:text="${character.name}"></span></p>
+    <p class="stat">Age: <span th:text="${character.age}"></span></p>
+    <p class="stat">Level: <span th:text="${character.level}"></span></p>
+    <p class="stat">HP: <span th:text="${character.hp}"></span></p>
+    <p class="stat">XP: <span th:text="${character.xp}"></span></p>
+    <p class="stat">Species: <span th:text="${character.species}"></span></p>
+    <p class="stat">Background: <span th:text="${character.background}"></span></p>
+    <p class="stat">Class: <span th:text="${character.dndclass}"></span></p>
+    <p class="stat">Strength: <span th:text="${character.strength}"></span></p>
+    <p class="stat">Dexterity: <span th:text="${character.dexterity}"></span></p>
+    <p class="stat">Intelligence: <span th:text="${character.intelligence}"></span></p>
+    <p class="stat">Constitution: <span th:text="${character.constitution}"></span></p>
+    <p class="stat">Wisdom: <span th:text="${character.wisdom}"></span></p>
+    <p class="stat">Charisma: <span th:text="${character.charisma}"></span></p>
+</div>
+
+
+<div id="chat-container" style="width: 67%;">
+    <div id="chat-box">
+        <div th:each="msg : ${session.messages}"
+             th:class="'message ' + ${msg.role} + ' texts'">
+            <p th:text="${msg.content}"></p>
+            <span th:text="${#dates.format(msg.timestamp,'HH:mm')}"></span>
+        </div>
+    </div>
+    <div id="input-container">
+        <input type="text" id="messageInput" placeholder="Type your action..." />
+        <button onclick="dice(event)">Dice</button>
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    //Start Websocket
+    let socket = new WebSocket("ws://localhost:8080/ws/chat");
+
+    //Console check if websocket opened successfully
+    socket.onopen = () => {
+        console.log("Connected to WebSocket!");
+    };
+    //Whenever an ai message is received, add it to the chat
+    socket.onmessage = (event) => {
+        let data;
+
+        try {
+            data = JSON.parse(event.data);
+        } catch (e) {
+            // fallback (AI plain string)
+            addMessage("assistant", event.data);
+            return;
+        }
+
+        if (data.type === "dungeon") {
+            document.getElementById("dungeonMap").textContent = data.map;
+            console.log("Dungeon map received!");
+        }
+
+        if (data.type === "assistant") {
+            addMessage("assistant", data.message);
+        }
+    };
+    //Error handling
+    socket.onerror = (e) => console.error("WebSocket error", e);
+
+
+
+
+
+    //Function to add messages to chat
+    function addMessage(role, text){
+        if (!text) return;
+
+        const chatBox = document.getElementById("chat-box");
+
+        // Create message container
+        const messageDiv = document.createElement("div");
+        messageDiv.classList.add("message", role, "texts");
+
+        // Create message paragraph
+        const messageP = document.createElement("p");
+        messageP.textContent = text;
+
+        // Create timestamp
+        const timestamp = document.createElement("span");
+        const now = new Date();
+        const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        timestamp.textContent = timeString;
+
+        // Assemble
+        messageDiv.appendChild(messageP);
+        messageDiv.appendChild(timestamp);
+        chatBox.appendChild(messageDiv);
+    }
+    //Function to send message to API
+    async function sendMessage() {
+        const input = document.getElementById("messageInput");
+        const messageText = input.value.trim();
+        //Add message to chat
+        addMessage("user", messageText);
+        //Send message to AI through websocket
+        socket.send(messageText);
+        //Reset input value to nothing
+        input.value = "";
+
+        // Scroll to bottom
+        scrollToBottom()
+
+    }
+    //Make sure that you can send a message with "enter"
+    document.getElementById("messageInput").addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            sendMessage();
+            scrollToBottom()
+        }
+    });
+    //Function to make the menu appear
+    function menuKey(){
+        const menu = document.getElementById("escapeMenu");
+        menu.style.display = menu.style.display === "none" ? "block" : "none";
+    }
+    //Menu pops up on "escape" key
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+            menuKey();
+        }
+    });
+    // Open dice popup
+    function dice(){
+        const popup = document.getElementById("dicePopup");
+        const diceButton = event.target;
+
+        // Temporarily show popup (but invisible) so we can measure height
+        popup.style.display = "block";
+        popup.style.visibility = "hidden";
+
+        const rect = diceButton.getBoundingClientRect();
+        const popupHeight = popup.offsetHeight;
+        const popupWidth = popup.offsetWidth;
+
+        // Center horizontally above button
+        const left = rect.left + (rect.width / 2) - (popupWidth / 2);
+
+        // Move vertically ABOVE the button
+        const top = rect.top - popupHeight - 10; // 10px spacing
+
+        popup.style.left = left + "px";
+        popup.style.top = top + "px";
+
+        // Now make popup visible
+        popup.style.visibility = "visible";
+    }
+
+    // Close popup
+    function closeDicePopup() {
+        document.getElementById("dicePopup").style.display = "none";
+    }
+
+    // Handle dice submit
+    function submitDice() {
+        const numDice = document.getElementById("numDice").value;
+        const diceRange = document.getElementById("diceRange").value;
+        let total = 0;
+        for(let i=0; i<numDice; i++)
+        {
+            total = total + Math.floor(Math.random() * (diceRange) + 1);
+        }
+        addMessage("user", total);
+        total = 0;
+        closeDicePopup();
+    }
+    //Function to scroll to the bottom of the chat
+    function scrollToBottom() {
+        const chatBox = document.getElementById("chat-box");
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+    window.onload = () => {
+        scrollToBottom();
+    };
+
+    window.onload = loadHistory;
+
+    async function loadHistory() {
+        // Example: URL = http://localhost:8080/AIDnD/session/123
+        const pathParts = window.location.pathname.split('/');
+        const sessionId = pathParts[pathParts.length - 1]; // "123"
+        const response = await fetch(`/AIDnD/api/session/${sessionId}/messages`);
+        const messages = await response.json();
+
+        messages.forEach(msg => {
+            addMessage(msg.role === "assistant" ? "assistant" : "user", msg.content, msg.timestamp);
+        });
+
+        scrollToBottom();
+    }
+
+    document.addEventListener("keydown", async function(event) {
+        if (event.key === "m" || event.key === "M") {
+            const mapContainer = document.getElementById("dungeonMap");
+
+            // Toggle display
+            if (mapContainer.style.display === "none") {
+                try {
+
+                    mapContainer.style.display = "block";
+                } catch (err) {
+                    alert(err.message);
+                }
+            } else {
+                mapContainer.style.display = "none";
+            }
+        }
+    });
+
+</script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create Character</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+
+<div id="character-sheet">
+    <h2 style="text-align: center;">Create Your Character</h2>
+
+    <form th:action="@{/AIDnD/create}" th:object="${character}" method="post" style="max-width: 400px; margin: 0 auto;">
+        <br>
+        <br>
+        <br>
+        <label>Name:</label>
+        <input type="text" th:field="*{name}" required/><br>
+
+        <label>Age:</label>
+        <input type="number" th:field="*{age}" min="0"  required/><br>
+
+        <label>Level:</label>
+        <input type="number" th:field="*{level}" min="1" value="10" required/><br>
+
+        <label>HP:</label>
+        <input type="number" th:field="*{hp}" min="8" max="15" value="10" required/><br>
+
+        <label>XP:</label>
+        <input type="number" th:field="*{xp}" min="0" value="10" required/><br>
+
+        <label>Species:</label>
+        <input type="text" th:field="*{species}" required/><br>
+
+        <label>Background:</label>
+        <input type="text" th:field="*{background}" required/><br>
+
+        <label>Class:</label>
+        <input type="text" th:field="*{dndclass}" required/><br>
+
+        <label>Strength:</label>
+        <input type="number" th:field="*{strength}" min="8" max="15" value="10" required/><br>
+
+        <label>Dexterity:</label>
+        <input type="number" th:field="*{dexterity}" min="8" max="15" value="10" required/><br>
+
+        <label>Intelligence:</label>
+        <input type="number" th:field="*{intelligence}" min="8" max="15" value="10" required/><br>
+
+        <label>Constitution:</label>
+        <input type="number" th:field="*{constitution}" min="8" max="15" value="10" required/><br>
+
+        <label>Wisdom:</label>
+        <input type="number" th:field="*{wisdom}" min="8" max="15" value="10" required/><br>
+
+        <label>Charisma:</label>
+        <input type="number" th:field="*{charisma}" min="8" max="15" value="10" required/><br>
+
+        <br>
+        <button type="submit" style="display: block; margin: 0 auto;">Start Adventure</button>
+    </form>
+</div>
+</body>
+</html>

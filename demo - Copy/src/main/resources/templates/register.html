@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div id="character-sheet">
+    <h2 style="text-align: center;">Register</h2>
+    <form th:action="@{/AIDnD/register}" method="post">
+        <br>
+        <br>
+        <br>
+        <label>Username:</label>
+        <input type="text" name="username" required><br>
+        <label>Password:</label>
+        <input type="password" name="password" required><br>
+        <button type="submit" style="display: block; margin: 0 auto;">Register</button>
+    </form>
+</div>
+</body>
+</html>

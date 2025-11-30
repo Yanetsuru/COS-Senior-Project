@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div id="character-sheet">
+    <h2 style="text-align: center;">Select Session</h2>
+    <ul>
+        <table border="1" cellpadding="10">
+            <tr>
+                <th>Session Name</th>
+                <th>Character</th>
+                <th>Last Played</th>
+                <th>Action</th>
+            </tr>
+
+            <tr th:each="s : ${sessions}">
+                <td th:text="${s.name}"></td>
+                <td th:text="${s.character.name}"></td>
+                <td th:text="${s.lastModified}"></td>
+
+                <td>
+                    <a th:href="@{/AIDnD/session/{id}(id=${s.id})}">
+                        Continue
+                    </a>
+                </td>
+            </tr>
+
+        </table>
+
+        <br><br>
+        <a href="/AIDnD/create">Start New Adventure</a>
+
+    </ul>
+
+</div>
+</body>
+</html>

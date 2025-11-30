@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Main Menu</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <style>
+        body {
+
+
+            text-align: center;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+
+        h1 {
+            font-size: 3rem;
+            text-shadow: 2px 2px 10px #000;
+            margin-bottom: 40px;
+            letter-spacing: 3px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #5b3a2e, #8b4513);
+            color: #ff0101;
+            border: 2px solid #d4af37;
+            border-radius: 10px;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-family: "MedievalSharp", cursive;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px #000;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            background: linear-gradient(135deg, #7b4b32, #b5651d);
+            box-shadow: 0 0 20px #d4af37;
+        }
+    </style>
+</head>
+<body>
+<h1 >AI Dungeons & Dragons</h1>
+<button onclick="window.location.href='/AIDnD/create'">New Session</button>
+<button onclick="window.location.href='/AIDnD/login'">Login</button>
+<button onclick="window.location.href='/AIDnD/register'">Register</button>
+</body>
+</html>

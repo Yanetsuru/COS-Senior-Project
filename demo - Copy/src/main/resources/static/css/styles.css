@@ -1,0 +1,129 @@
+
+body {
+<!--font-family: Arial, sans-serif;-->
+    font-family: 'Mystery Quest',serif;
+    background: #672b04;
+    color: #ff0101;
+    display: flex;
+    justify-content: center;
+    padding: 30px;
+    background-image: url("https://i0.wp.com/dungeonsanddragonsfan.com/wp-content/uploads/2024/03/dnd-video-game-gameloft-montreal-hero.png?resize=800%2C450&ssl=1");
+    background-size: cover;
+
+
+}
+#chat-container {
+    width: 67%;
+    max-height: 80%;
+    height: 800px;
+    border: 1px solid #333;
+    border-radius: 10px;
+    background: #222;
+    display: flex;
+    flex-direction: column;
+
+}
+#character-sheet{
+    width: 33%;
+    max-height: 70%;
+    height: 700px;
+    background: url("https://images.stockcake.com/public/d/b/7/db75be35-3e0d-4f76-a715-0999bdab4fec_large/ancient-scroll-background-stockcake.jpg") no-repeat;
+<!--mix-blend-mode: multiply;-->
+    background-attachment: fixed;
+    background-size: 100% 100%;
+
+
+}
+#chat-box {
+    flex: 1;
+    padding: 10px;
+    overflow: scroll;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    border-bottom: 1px solid #333;
+
+
+    .message {
+
+
+        max-width: 70%;
+        display: flex;
+        flex-direction: column;
+
+
+
+
+        &.user {
+
+            align-self: flex-end;
+            color: white;
+
+            p {
+                background: #4caf50;
+                padding: 20px;
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+            }
+            span {
+                align-self: flex-end;
+            }
+
+
+        }
+        &.assistant {
+
+            align-self: flex-start;
+            color: #eee;
+
+            p {
+                background: #333;
+                padding: 20px;
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+            }
+
+
+        }
+        &.texts {
+
+            span {
+                font-size: 13px;
+                display: flex;
+            }
+
+
+        }
+
+    }
+
+}
+.stat {
+    padding-left: 33%;
+}
+
+label {
+    padding-left: 33%;
+}
+
+#input-container {
+    display: flex;
+    padding: 10px;
+}
+#input-container input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+}
+#input-container button {
+    margin-left: 10px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    background: #4caf50;
+    color: white;
+    cursor: pointer;
+}
