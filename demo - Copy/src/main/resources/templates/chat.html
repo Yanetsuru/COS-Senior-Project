@@ -124,20 +124,29 @@
         try {
             data = JSON.parse(event.data);
         } catch (e) {
-            // fallback (AI plain string)
             addMessage("assistant", event.data);
             return;
         }
 
         if (data.type === "dungeon") {
             document.getElementById("dungeonMap").textContent = data.map;
-            console.log("Dungeon map received!");
+            return;
         }
 
         if (data.type === "assistant") {
             addMessage("assistant", data.message);
+            return;
+        }
+
+        if (data.type === "characterUpdate") {
+            // UI update
+            document.querySelector("span[th\\:text='${character.hp}']").textContent = data.hp;
+            document.querySelector("span[th\\:text='${character.xp}']").textContent = data.xp;
+            document.querySelector("span[th\\:text='${character.level}']").textContent = data.level;
+            return;
         }
     };
+
     //Error handling
     socket.onerror = (e) => console.error("WebSocket error", e);
 
@@ -245,6 +254,7 @@
             total = total + Math.floor(Math.random() * (diceRange) + 1);
         }
         addMessage("user", total);
+        socket.send(total);
         total = 0;
         closeDicePopup();
     }
@@ -290,6 +300,17 @@
             }
         }
     });
+    const inputField = document.getElementById("messageInput");
+    const mapContainer = document.getElementById("dungeonMap");
+
+    inputField.addEventListener("focus", () => {
+        mapContainer.style.display = "none";
+    });
+
+    inputField.addEventListener("input", () => {
+        mapContainer.style.display = "none";
+    });
+
 
 </script>
 </body>

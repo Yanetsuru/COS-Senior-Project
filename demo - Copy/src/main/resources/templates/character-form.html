@@ -28,14 +28,55 @@
         <label>XP:</label>
         <input type="number" th:field="*{xp}" min="0" value="10" required/><br>
 
+
         <label>Species:</label>
-        <input type="text" th:field="*{species}" required/><br>
+        <select th:field="*{species}" required>
+            <option value="">-- Select Species --</option>
+            <option value="Human">Human</option>
+            <option value="Elf">Elf</option>
+            <option value="Dwarf">Dwarf</option>
+            <option value="Halfling">Halfling</option>
+            <option value="Gnome">Gnome</option>
+            <option value="Half-Elf">Half-Elf</option>
+            <option value="Half-Orc">Half-Orc</option>
+            <option value="Tiefling">Tiefling</option>
+            <option value="Dragonborn">Dragonborn</option>
+        </select><br>
+
+
 
         <label>Background:</label>
-        <input type="text" th:field="*{background}" required/><br>
+        <select th:field="*{background}" required>
+            <option value="">-- Select Background --</option>
+            <option value="Soldier">Soldier</option>
+            <option value="Noble">Noble</option>
+            <option value="Outlander">Outlander</option>
+            <option value="Sage">Sage</option>
+            <option value="Acolyte">Acolyte</option>
+            <option value="Criminal">Criminal</option>
+            <option value="Folk Hero">Folk Hero</option>
+        </select><br>
+
+
 
         <label>Class:</label>
-        <input type="text" th:field="*{dndclass}" required/><br>
+        <select th:field="*{dndclass}" required>
+            <option value="">-- Select Class --</option>
+            <option value="Barbarian">Barbarian</option>
+            <option value="Bard">Bard</option>
+            <option value="Cleric">Cleric</option>
+            <option value="Druid">Druid</option>
+            <option value="Fighter">Fighter</option>
+            <option value="Monk">Monk</option>
+            <option value="Paladin">Paladin</option>
+            <option value="Ranger">Ranger</option>
+            <option value="Rogue">Rogue</option>
+            <option value="Sorcerer">Sorcerer</option>
+            <option value="Warlock">Warlock</option>
+            <option value="Wizard">Wizard</option>
+        </select><br>
+
+
 
         <label>Strength:</label>
         <input type="number" th:field="*{strength}" min="8" max="15" value="10" required/><br>

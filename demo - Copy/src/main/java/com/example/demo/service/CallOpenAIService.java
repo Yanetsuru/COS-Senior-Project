@@ -16,7 +16,8 @@ public class CallOpenAIService {
     public String callOpenAiApi(List<Map<String, String>> input) throws InterruptedException {
         //String openAiApiKey = "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";
         //String openAiApiKey = "sk-proj-LeziL4sDBB-Ut9IgACy1fA7As3zD4YlecLj1TyOfnq3E4Y7tfTEJVfQy5Zf4-aaVcO_ZPkkMyT3BlbkFJ5K1sofO1I7SgVpMREZ18pGtQXvglfWpgGsnW2YAz94Tbjmd2CnNwYm8NC9C9SI2uqcsTkCEmsA";
-        String openAiApiKey = "sk-proj-H1P7PuSdfZ3YvQ8tlFSgJ_6tjGiP8VM-_aiFm7CFAWRak6vM7W3yIufake98ikP4uITd3-bGk9T3BlbkFJPhCjTt0GMTfeSQdmAbTf1wtojY6pX7w9xmwW4bBw5Ba_dg1jGn826AH5wyrsbnPNBK2Jmf9wwA";
+        //String openAiApiKey = "sk-proj-H1P7PuSdfZ3YvQ8tlFSgJ_6tjGiP8VM-_aiFm7CFAWRak6vM7W3yIufake98ikP4uITd3-bGk9T3BlbkFJPhCjTt0GMTfeSQdmAbTf1wtojY6pX7w9xmwW4bBw5Ba_dg1jGn826AH5wyrsbnPNBK2Jmf9wwA";
+        String openAiApiKey = "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";
         String apiUrl = "https://api.openai.com/v1/responses";
 
         RestTemplate restTemplate = new RestTemplate();
@@ -24,6 +25,7 @@ public class CallOpenAIService {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + openAiApiKey);
         headers.set("Content-Type", "application/json");
+        headers.set("OpenAI-Beta", "responses=v1");
 
 
         List<Map<String, Object>> formattedHistory = formatHistoryForOpenAI(input);
